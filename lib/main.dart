@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'model.dart';
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -12,46 +10,49 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Server',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.pink,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(title: 'Flutter Server App'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+  final String title;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Post data;
-  Future<Post> getData() async {
-    var url = 'http://isoclinal-students.000webhostapp.com/get.php';
-    http.Response respone = await http.get(url);
-    if (respone == 200) {
-      data = Post.fromJson(jsonDecode(respone.body));
-      print(data.toJson());
-    } else {
-      throw Exception('Failed to load data');
-    }
+  var data;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+      ),
+      body: Text(
+        'MYSQL DATA : \n $data',
+        style: TextStyle(fontSize: 42),
+      ),
+    );
+  }
+
+  Future getData() async {
+    var url = 'https://isoclinal-students.000webhostapp.com/get.php';
+    http.Response response = await http.get(url);
+    data = jsonDecode(response.body);
+    print(data.toString());
   }
 
   @override
   void initState() {
     getData();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Testing'),
-      ),
-      body: Text(data.postBody),
-    );
   }
 }
