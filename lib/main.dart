@@ -10,12 +10,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Server',
+      title: 'Flutter MYSQL Server',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: MyHomePage(title: 'Flutter Server App'),
+      home: MyHomePage(title: 'Flutter MYSQL Server App'),
     );
   }
 }
@@ -37,9 +37,14 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         centerTitle: true,
       ),
-      body: Text(
-        'MYSQL DATA : \n $data',
-        style: TextStyle(fontSize: 42),
+      body: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Text(
+            'MYSQL DATA : \n\n ${data[index]} \n',
+            style: TextStyle(fontSize: 24),
+          );
+        },
       ),
     );
   }
@@ -48,11 +53,13 @@ class _MyHomePageState extends State<MyHomePage> {
     var url = 'https://isoclinal-students.000webhostapp.com/get.php';
     http.Response response = await http.get(url);
     data = jsonDecode(response.body);
-    print(data.toString());
+    print(data);
+    setState(() {});
   }
 
   @override
   void initState() {
     getData();
+    setState(() {});
   }
 }
